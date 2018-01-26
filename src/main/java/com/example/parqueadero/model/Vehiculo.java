@@ -18,7 +18,7 @@ public class Vehiculo implements Serializable{
 	private int cilindraje;
 	
 	@NotBlank
-	private TipoVehiculo tipoVehiculo;
+	private String tipoVehiculo;
 
 	public String getPlaca() {
 		return placa;
@@ -36,11 +36,11 @@ public class Vehiculo implements Serializable{
 		this.cilindraje = cilindraje;
 	}
 
-	public TipoVehiculo getTipoVehiculo() {
+	public String getTipoVehiculo() {
 		return tipoVehiculo;
 	}
 
-	public void setTipoVehiculo(TipoVehiculo tipoVehiculo) {
+	public void setTipoVehiculo(String tipoVehiculo) {
 		this.tipoVehiculo = tipoVehiculo;
 	}
 	

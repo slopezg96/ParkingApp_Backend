@@ -15,21 +15,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.parqueadero.model.TipoVehiculo;
 import com.example.parqueadero.model.Vehiculo;
 import com.example.parqueadero.model.VehiculoParqueado;
+import com.example.parqueadero.repository.TipoVehiculoRepositorio;
 import com.example.parqueadero.repository.VehiculoParqueaderoRepositorio;
+import com.example.parqueadero.util.DateHelper;
 
 
 @RestController
 @RequestMapping("/api")
 public class VehiculoParqueadoController {
+	private static final String MOTO = "Moto";
+	private static final String CARRO = "Carro";
+	private static final double VALOR_ADICIONAL_X_CILINDRAJE = 2000;
 	@Autowired
     VehiculoParqueaderoRepositorio vehiculoParqueaderoRepositorio;
+	
+	@Autowired
+    TipoVehiculoRepositorio tipoVehiculoRepositorio;
 
  // Traer todos los VehiculosParqueados
     @GetMapping("/vehiculosParqueados")
     public List<VehiculoParqueado> getTodosVehiculosParqueados() {
-        return vehiculoParqueaderoRepositorio.findAll();
+    	return vehiculoParqueaderoRepositorio.findAll();
     }
 
  // Crear un nuevo VehiculoParqueado
@@ -66,6 +75,8 @@ public class VehiculoParqueadoController {
         if(vehiculoParqueado == null) {
             return ResponseEntity.notFound().build();
         }
+        vehiculoParqueado.setTipoVehiculo(vehiculoParqueadoDetalle.getTipoVehiculo());
+        vehiculoParqueado.setCilindraje(vehiculoParqueadoDetalle.getCilindraje());
         vehiculoParqueado.setFechaIngreso(vehiculoParqueadoDetalle.getFechaIngreso());
         vehiculoParqueado.setFechaSalida(vehiculoParqueadoDetalle.getFechaSalida());
         vehiculoParqueado.setValor(vehiculoParqueadoDetalle.getValor());
@@ -84,4 +95,37 @@ public class VehiculoParqueadoController {
         vehiculoParqueaderoRepositorio.delete(vehiculoParqueado);
         return ResponseEntity.ok().build();
     }	
+    
+    @PostMapping("/cobrar")
+    public Double cobrar(@Valid @RequestBody VehiculoParqueado vehiculoParqueado) {
+    	 DateHelper dateHelper = new DateHelper(vehiculoParqueado.getFechaIngreso(), vehiculoParqueado.getFechaSalida());
+         long dias = dateHelper.diferenciaDias();
+         long horas = dateHelper.diferenciaHoras();
+         double valorTotal = 0;
+         
+         TipoVehiculo tipoVehiculo = tipoVehiculoRepositorio.findByNombre(vehiculoParqueado.getTipoVehiculo());
+         switch (tipoVehiculo.getNombre()) {
+             case MOTO:
+                 if (dias > 0) {
+                     valorTotal = (dias * tipoVehiculo.getValorDia()) + ((horas % 24) * tipoVehiculo.getValorHora());
+                 } else if (horas >= 9) {
+                     valorTotal = tipoVehiculo.getValorDia();
+                 } else {
+                     valorTotal = horas * tipoVehiculo.getValorHora();
+                 }
+                 return vehiculoParqueado.getCilindraje() > 500 ? valorTotal + VALOR_ADICIONAL_X_CILINDRAJE : valorTotal;
+
+             case CARRO:
+                 if (dias > 0) {
+                     valorTotal = (dias * tipoVehiculo.getValorDia()) + ((horas % 24) * tipoVehiculo.getValorHora());
+                 } else if (horas >= 9) {
+                     valorTotal = tipoVehiculo.getValorDia();
+                 } else {
+                     valorTotal = horas * tipoVehiculo.getValorHora();
+                 }
+                 return valorTotal;
+             default:
+            	 return valorTotal;
+         }
+    }
 }

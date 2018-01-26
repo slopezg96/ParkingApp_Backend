@@ -1,12 +1,16 @@
 package com.example.parqueadero.model;
 
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Null;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,19 +20,19 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 public class VehiculoParqueado implements Serializable{
 	@Id
+	@Column(name = "placa", unique= true)
 	private String placa;
 	
-	@Column(nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private Date fechaIngreso;
+	private String tipoVehiculo;
 	
-	@Column(nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private Date fechaSalida;
+	private int cilindraje;
 	
-	@NotBlank
+    private String fechaIngreso;
+	
+    @Column(nullable = true)
+    private String fechaSalida;
+	
+
 	private double valor;
 
 	public String getPlaca() {
@@ -39,19 +43,19 @@ public class VehiculoParqueado implements Serializable{
 		this.placa = placa;
 	}
 
-	public Date getFechaIngreso() {
+	public String getFechaIngreso() {
 		return fechaIngreso;
 	}
 
-	public void setFechaIngreso(Date fechaIngreso) {
+	public void setFechaIngreso(String fechaIngreso) {
 		this.fechaIngreso = fechaIngreso;
 	}
 
-	public Date getFechaSalida() {
+	public String getFechaSalida() {
 		return fechaSalida;
 	}
 
-	public void setFechaSalida(Date fechaSalida) {
+	public void setFechaSalida(String fechaSalida) {
 		this.fechaSalida = fechaSalida;
 	}
 
@@ -62,6 +66,23 @@ public class VehiculoParqueado implements Serializable{
 	public void setValor(double valor) {
 		this.valor = valor;
 	}
+
+	public String getTipoVehiculo() {
+		return tipoVehiculo;
+	}
+
+	public void setTipoVehiculo(String tipoVehiculo) {
+		this.tipoVehiculo = tipoVehiculo;
+	}
+
+	public int getCilindraje() {
+		return cilindraje;
+	}
+
+	public void setCilindraje(int cilindraje) {
+		this.cilindraje = cilindraje;
+	}
+	
 	
 	
 }
