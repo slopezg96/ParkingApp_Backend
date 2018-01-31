@@ -1,19 +1,8 @@
 package com.example.parqueadero.model;
 
-import org.hibernate.validator.constraints.NotBlank;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
-import javax.validation.constraints.Null;
-
 import java.io.Serializable;
-import java.util.Date;
 
 @Entity
 @Table(name = "vehiculoParqueado")
@@ -23,7 +12,13 @@ public class VehiculoParqueado implements Serializable{
 	@Column(name = "placa", unique= true)
 	private String placa;
 	
+	private Long idTipoVehiculo;
+	
 	private String tipoVehiculo;
+	
+	private double valorDia;
+	
+	private double valorHora;
 	
 	private int cilindraje;
 	
@@ -81,6 +76,30 @@ public class VehiculoParqueado implements Serializable{
 
 	public void setCilindraje(int cilindraje) {
 		this.cilindraje = cilindraje;
+	}
+
+	public Long getIdTipoVehiculo() {
+		return idTipoVehiculo;
+	}
+
+	public void setIdTipoVehiculo(Long idTipoVehiculo) {
+		this.idTipoVehiculo = idTipoVehiculo;
+	}
+
+	public double getValorDia() {
+		return valorDia;
+	}
+
+	public void setValorDia(double valorDia) {
+		this.valorDia = valorDia;
+	}
+
+	public double getValorHora() {
+		return valorHora;
+	}
+
+	public void setValorHora(double valorHora) {
+		this.valorHora = valorHora;
 	}
 	
 	

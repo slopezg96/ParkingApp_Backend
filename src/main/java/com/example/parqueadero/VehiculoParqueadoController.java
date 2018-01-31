@@ -96,14 +96,15 @@ public class VehiculoParqueadoController {
         return ResponseEntity.ok().build();
     }	
     
-    @PostMapping("/cobrar")
-    public Double cobrar(@Valid @RequestBody VehiculoParqueado vehiculoParqueado) {
+    @PostMapping("/vehiculosParqueados/cobrar")
+    public VehiculoParqueado cobrar(@Valid @RequestBody VehiculoParqueado vehiculoParqueado) {
     	 DateHelper dateHelper = new DateHelper(vehiculoParqueado.getFechaIngreso(), vehiculoParqueado.getFechaSalida());
          long dias = dateHelper.diferenciaDias();
          long horas = dateHelper.diferenciaHoras();
          double valorTotal = 0;
          
-         TipoVehiculo tipoVehiculo = tipoVehiculoRepositorio.findByNombre(vehiculoParqueado.getTipoVehiculo());
+         TipoVehiculo tipoVehiculo = new TipoVehiculo();
+         tipoVehiculo = tipoVehiculoRepositorio.findOne((long) vehiculoParqueado.getIdTipoVehiculo());
          switch (tipoVehiculo.getNombre()) {
              case MOTO:
                  if (dias > 0) {
@@ -113,8 +114,8 @@ public class VehiculoParqueadoController {
                  } else {
                      valorTotal = horas * tipoVehiculo.getValorHora();
                  }
-                 return vehiculoParqueado.getCilindraje() > 500 ? valorTotal + VALOR_ADICIONAL_X_CILINDRAJE : valorTotal;
-
+                 vehiculoParqueado.setValor(vehiculoParqueado.getCilindraje() > 500 ? valorTotal + VALOR_ADICIONAL_X_CILINDRAJE : valorTotal);
+             break;
              case CARRO:
                  if (dias > 0) {
                      valorTotal = (dias * tipoVehiculo.getValorDia()) + ((horas % 24) * tipoVehiculo.getValorHora());
@@ -123,9 +124,25 @@ public class VehiculoParqueadoController {
                  } else {
                      valorTotal = horas * tipoVehiculo.getValorHora();
                  }
-                 return valorTotal;
-             default:
-            	 return valorTotal;
+                 vehiculoParqueado.setValor(valorTotal);
+             break;
          }
+         vehiculoParqueaderoRepositorio.delete(vehiculoParqueado.getPlaca());
+         return vehiculoParqueado;
+    }
+    
+    @PostMapping("/vehiculosParqueados/verificarDisponibilidad")
+    public Boolean verificarDisponibilidad(@Valid @RequestBody Vehiculo vehiculo) {
+    	int cantidadVehiculosParqueados;
+    	switch (vehiculo.getTipoVehiculo()) {
+		case MOTO:
+			cantidadVehiculosParqueados = vehiculoParqueaderoRepositorio.findByMoto(vehiculo.getTipoVehiculo());
+			return cantidadVehiculosParqueados > 10;
+		case CARRO:
+			cantidadVehiculosParqueados = vehiculoParqueaderoRepositorio.findByMoto(vehiculo.getTipoVehiculo());
+			return cantidadVehiculosParqueados > 20;
+		default:
+			return false;
+		}
     }
 }
