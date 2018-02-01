@@ -38,31 +38,4 @@ public class TipoVehiculoController {
 	        }
 	        return ResponseEntity.ok().body(tipoVehiculo);
 	    }
-
-	 // Actualizar un TipoVehiculo
-	    @PutMapping("/tiposVehiculo/{id}")
-	    public ResponseEntity<TipoVehiculo> updateTipoVehiculo(@PathVariable(value = "id") Long tipoVehiculoId, 
-	                                           @Valid @RequestBody TipoVehiculo tipoVehiculoDetalle) {
-	        TipoVehiculo tipoVehiculo = tipoVehiculoRepositorio.findOne(tipoVehiculoId);
-	        if(tipoVehiculo == null) {
-	            return ResponseEntity.notFound().build();
-	        }
-	        tipoVehiculo.setNombre(tipoVehiculoDetalle.getNombre());
-	        tipoVehiculo.setValorDia(tipoVehiculoDetalle.getValorDia());
-	        tipoVehiculo.setValorHora(tipoVehiculoDetalle.getValorHora());
-	        TipoVehiculo updatedTipoVehiculo = tipoVehiculoRepositorio.save(tipoVehiculo);
-	        return ResponseEntity.ok(updatedTipoVehiculo);
-	    }
-
-	 // Eliminar un TipoVehiculo
-	    @DeleteMapping("/tiposVehiculo/{id}")
-	    public ResponseEntity<TipoVehiculo> deleteTipoVehiculo(@PathVariable(value = "id") Long tipoVehiculoId) {
-	        TipoVehiculo tipoVehiculo = tipoVehiculoRepositorio.findOne(tipoVehiculoId);
-	        if(tipoVehiculo == null) {
-	            return ResponseEntity.notFound().build();
-	        }
-
-	        tipoVehiculoRepositorio.delete(tipoVehiculo);
-	        return ResponseEntity.ok().build();
-	    }	
 }

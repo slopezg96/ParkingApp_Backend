@@ -20,7 +20,7 @@ import com.example.parqueadero.repository.TipoVehiculoRepositorio;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ParqueaderoApplicationTests {
+public class TipoVehiculoControllerTest {
 
 	
 	@Mock
@@ -34,8 +34,6 @@ public class ParqueaderoApplicationTests {
 	public void setUp(){
 		
 	}
-	
-	private List<TipoVehiculo> resultado;
 	
 	public TipoVehiculo getTipoVehiculo(){
 		TipoVehiculo moto = new TipoVehiculo();
@@ -61,6 +59,17 @@ public class ParqueaderoApplicationTests {
 		TipoVehiculo respuesta = tipoVehiculoController.crearTipoVehiculo(tipoVehiculo);
 		Assert.assertSame(tipoVehiculo.getNombre(), respuesta.getNombre());
 	}
+	
+	@Test
+	public void metodoGetTodosTiposVehiculosRetornaUnaLista(){
+		List<TipoVehiculo> tiposVehiculos = new ArrayList<>();
+		tiposVehiculos.add(getTipoVehiculo());
+		Mockito.when(tipoVehiculoRepositorio.findAll()).thenReturn(tiposVehiculos);
+		List<TipoVehiculo> respuesta = tipoVehiculoController.getTodosTiposVehiculo();
+		Assert.assertSame(tiposVehiculos, respuesta);
+		
+	}
+	
 	
 
 }

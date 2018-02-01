@@ -56,33 +56,6 @@ public class VehiculoParqueadoController {
         }
         return ResponseEntity.ok().body(vehiculoParqueado);
     }
-    
- // Traer un solo TipoVehiculo
-    @GetMapping("/vehiculosParqueados/{tipoVehiculo}")
-    public ResponseEntity<VehiculoParqueado> getVehiculoParqueadoXTipoVehiculo(@PathVariable(value = "tipoVehiculo") String tipo) {
-    	VehiculoParqueado vehiculoParqueado = vehiculoParqueaderoRepositorio.findOne(tipo);
-        if(vehiculoParqueado == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(vehiculoParqueado);
-    }
-
- // Actualizar un TipoVehiculo
-    @PutMapping("/vehiculosParqueados/{placa}")
-    public ResponseEntity<VehiculoParqueado> updateVehiculoParqueado(@PathVariable(value = "placa") String placa, 
-                                           @Valid @RequestBody VehiculoParqueado vehiculoParqueadoDetalle) {
-    	VehiculoParqueado vehiculoParqueado = vehiculoParqueaderoRepositorio.findOne(placa);
-        if(vehiculoParqueado == null) {
-            return ResponseEntity.notFound().build();
-        }
-        vehiculoParqueado.setTipoVehiculo(vehiculoParqueadoDetalle.getTipoVehiculo());
-        vehiculoParqueado.setCilindraje(vehiculoParqueadoDetalle.getCilindraje());
-        vehiculoParqueado.setFechaIngreso(vehiculoParqueadoDetalle.getFechaIngreso());
-        vehiculoParqueado.setFechaSalida(vehiculoParqueadoDetalle.getFechaSalida());
-        vehiculoParqueado.setValor(vehiculoParqueadoDetalle.getValor());
-        VehiculoParqueado updatedVehiculoParqueado = vehiculoParqueaderoRepositorio.save(vehiculoParqueado);
-        return ResponseEntity.ok(updatedVehiculoParqueado);
-    }
 
  // Eliminar un TipoVehiculo
     @DeleteMapping("/vehiculosParqueados/{placa}")
@@ -129,20 +102,5 @@ public class VehiculoParqueadoController {
          }
          vehiculoParqueaderoRepositorio.delete(vehiculoParqueado.getPlaca());
          return vehiculoParqueado;
-    }
-    
-    @PostMapping("/vehiculosParqueados/verificarDisponibilidad")
-    public Boolean verificarDisponibilidad(@Valid @RequestBody Vehiculo vehiculo) {
-    	int cantidadVehiculosParqueados;
-    	switch (vehiculo.getTipoVehiculo()) {
-		case MOTO:
-			cantidadVehiculosParqueados = vehiculoParqueaderoRepositorio.findByMoto(vehiculo.getTipoVehiculo());
-			return cantidadVehiculosParqueados > 10;
-		case CARRO:
-			cantidadVehiculosParqueados = vehiculoParqueaderoRepositorio.findByMoto(vehiculo.getTipoVehiculo());
-			return cantidadVehiculosParqueados > 20;
-		default:
-			return false;
-		}
     }
 }
