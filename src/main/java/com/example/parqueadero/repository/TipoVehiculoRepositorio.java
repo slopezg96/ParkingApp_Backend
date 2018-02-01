@@ -9,6 +9,4 @@ import com.example.parqueadero.model.TipoVehiculo;
 @Repository
 public interface TipoVehiculoRepositorio extends JpaRepository<TipoVehiculo, Long>{
 	
-	/*@Query("SELECT t FROM tipo_vehiculo t WHERE t.nombre = ?1")
-    TipoVehiculo findByNombre(String nombre);*/
 }
