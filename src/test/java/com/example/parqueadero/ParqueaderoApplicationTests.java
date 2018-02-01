@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,18 @@ import com.example.parqueadero.repository.TipoVehiculoRepositorio;
 @SpringBootTest
 public class ParqueaderoApplicationTests {
 
+	
 	@Mock
-	@Autowired
 	private TipoVehiculoRepositorio tipoVehiculoRepositorio;
 	
-	@Autowired
-	private TipoVehiculoController tipoVehiculoController;
+	@InjectMocks
+	@Autowired	
+	TipoVehiculoController tipoVehiculoController;
 	
+	@Before
+	public void setUp(){
+		
+	}
 	
 	private List<TipoVehiculo> resultado;
 	
@@ -42,10 +48,9 @@ public class ParqueaderoApplicationTests {
 	
 	@Test
 	public void verificarMetodoBusquedaDeTipoVehiculoMoto() {
-		
 		TipoVehiculo moto =  getTipoVehiculo();
-		
-		TipoVehiculo tipoVehiculo = tipoVehiculoRepositorio.findOne(1L);
+		Mockito.when(tipoVehiculoRepositorio.findOne(1L)).thenReturn(moto);
+		TipoVehiculo tipoVehiculo = tipoVehiculoController.getTipoVehiculoXId(1L).getBody();
 		Assert.assertEquals(tipoVehiculo.getNombre(), moto.getNombre());
 	}
 	
