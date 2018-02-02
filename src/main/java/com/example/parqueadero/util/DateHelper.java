@@ -12,7 +12,7 @@ public class DateHelper {
     private long milisegundosIngreso;
     private long milisegundosSalida;
     private long milisegundoDiferencia;
-    private final static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public final static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public DateHelper(String fechaIngreso, String fechaSalida) {
     	Date fechaIngresoDate = convertirStringADate(fechaIngreso);
@@ -42,9 +42,8 @@ public class DateHelper {
         }
     }
 
-    public static String convertirDateAString(Date fechaAConvertir) throws ParseException {
-    	SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
-        Format formato = format;
+    public static String convertirDateAString(Date fechaAConvertir){
+        Format formato = new SimpleDateFormat(DATE_FORMAT);
         return formato.format(fechaAConvertir);
     }
 }
