@@ -95,7 +95,7 @@ public class VehiculoParqueadoControllerTest {
 	}
 	
 	@Test
-	public void cuandoGetVehiculoXPlacaRetornaNull(){
+	public void cuandoGetVehiculoXPlacaRetornaResponseEntityBodyNull(){
 		VehiculoParqueado vehiculoParqueado = getMoto();
 		Mockito.when(vehiculoParqueaderoRepositorio.findOne(vehiculoParqueado.getPlaca())).thenReturn(null);
 		ResponseEntity<VehiculoParqueado> respuestaVehiculoParqueado = vehiculoParqueadoController.getVehiculoParqueadoXPlaca(vehiculoParqueado.getPlaca());
