@@ -56,18 +56,6 @@ public class VehiculoParqueadoController {
         }
         return ResponseEntity.ok().body(vehiculoParqueado);
     }
-
- // Eliminar un TipoVehiculo
-    @DeleteMapping("/vehiculosParqueados/{placa}")
-    public ResponseEntity<VehiculoParqueado> deleteVehiculoParqueado(@PathVariable(value = "placa") String placa) {
-    	VehiculoParqueado vehiculoParqueado = vehiculoParqueaderoRepositorio.findOne(placa);
-        if(vehiculoParqueado == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        vehiculoParqueaderoRepositorio.delete(vehiculoParqueado);
-        return ResponseEntity.ok().build();
-    }	
     
     @PostMapping("/vehiculosParqueados/cobrar")
     public VehiculoParqueado cobrar(@Valid @RequestBody VehiculoParqueado vehiculoParqueado) {
