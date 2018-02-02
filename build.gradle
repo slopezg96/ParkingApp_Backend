@@ -28,7 +28,7 @@ jacoco {
     reportsDir = file("$buildDir/customJacocoReportDir")
 }
 
-jacocoTestReport {
+test jacocoTestReport {
     reports {
         xml.enabled false
         csv.enabled false
