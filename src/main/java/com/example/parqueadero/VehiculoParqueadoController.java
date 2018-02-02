@@ -61,8 +61,7 @@ public class VehiculoParqueadoController {
          long horas = dateHelper.diferenciaHoras();
          double valorTotal = 0;
          
-         TipoVehiculo tipoVehiculo = new TipoVehiculo();
-         tipoVehiculo = tipoVehiculoRepositorio.findOne((long) vehiculoParqueado.getIdTipoVehiculo());
+         TipoVehiculo tipoVehiculo = tipoVehiculoRepositorio.findOne((long) vehiculoParqueado.getIdTipoVehiculo());
          switch (tipoVehiculo.getNombre()) {
              case MOTO:
                  if (dias > 0) {
@@ -84,6 +83,9 @@ public class VehiculoParqueadoController {
                  }
                  vehiculoParqueado.setValor(valorTotal);
              break;
+             default:
+            	 vehiculoParqueado.setValor(0);
+            	 break;
          }
          vehiculoParqueaderoRepositorio.delete(vehiculoParqueado.getPlaca());
          return vehiculoParqueado;
